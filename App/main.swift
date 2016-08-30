@@ -5,9 +5,10 @@ import MySQL
 
 let mysql = try VaporMySQL.Provider(host: "127.0.0.1", user: "root", password: "", database: "vapor_db")
 
-let drop = Droplet(preparations: [Product.self, User.self], initializedProviders: [mysql])
+let drop = Droplet(preparations: [User.self], initializedProviders: [mysql])
 
-drop.resource("/products", ProductController.instance)
+// setup uniqueness
+try mysql.driver.raw("ALTER TABLE users ADD UNIQUE (email)")
 
 var authedUsers: [String: User] = [:]
 
